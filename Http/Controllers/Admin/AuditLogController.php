@@ -8,10 +8,22 @@ use Modules\AuditLog\DataTables\TaskLogDataTable;
 use Modules\AuditLog\DataTables\UserLogDataTable;
 use App\Http\Controllers\Admin\AdminBaseController;
 use Modules\AuditLog\DataTables\ProjectLogDataTable;
+use Modules\AuditLog\DataTables\LogActivityDataTable;
 
 class AuditLogController extends AdminBaseController
 {
     /**
+     * Display a listing of the resource.
+     * @return Response
+     */
+    public function index(Request $request, LogActivityDataTable $dataTables)
+    {
+        $this->pageTitle = __('All Log');
+
+        return $dataTables->render('auditlog::log-activities', $this->data);
+    }
+
+     /**
      * Display a listing of the resource.
      * @return Response
      */
