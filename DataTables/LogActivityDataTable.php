@@ -8,8 +8,6 @@ use App\LogActivity;
 use Yajra\DataTables\Html\Button;
 use Illuminate\Support\Str;
 
-use function GuzzleHttp\json_decode;
-
 class LogActivityDataTable extends BaseDataTable
 {
     /**
@@ -29,22 +27,18 @@ class LogActivityDataTable extends BaseDataTable
             ->addColumn('description', function ($row) {
                 return  $row->description . ' ' . Str::afterLast($row->subject_type , '\\');;
             })
-            // ->editColumn('properties', function ($row) {
-            //   if($row->properties)
-            //   {
-            //    return  $properties = json_decode($row->properties,true);
-            //     // $data=[];
-            //     // foreach($properties as $property)
-            //     //   array_push($data,$property);
-            //     // return $data;
-            //   }
-            //   else 
-            //     return '-';
-            // })
+            ->editColumn('properties', function ($row) {
+              if($row->properties)
+              {
+                return view('auditlog::properties')->with('properties',json_decode($row->properties,true))->with('id',$row->id);
+              }
+              else 
+                return '-';
+            })
             ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d M Y - h:i a');
             })
-            ->rawColumns(['user.name']);
+            ->rawColumns(['user.name','properties']);
     }
 
     /**

@@ -9,6 +9,7 @@ use Modules\AuditLog\DataTables\UserLogDataTable;
 use App\Http\Controllers\Admin\AdminBaseController;
 use Modules\AuditLog\DataTables\ProjectLogDataTable;
 use Modules\AuditLog\DataTables\LogActivityDataTable;
+use DB;
 
 class AuditLogController extends AdminBaseController
 {
