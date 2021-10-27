@@ -10,5 +10,6 @@ Route::group(
         Route::get('audit-log/user', 'AuditLogController@user')->name('user');
         Route::get('audit-log/task', 'AuditLogController@task')->name('task');
         Route::get('audit-log/project', 'AuditLogController@project')->name('project');
+        Route::get('log-activities', 'AuditLogController@index')->name('log-activities');
     }
 );

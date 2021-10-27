@@ -7,6 +7,11 @@
     </a>
     <ul class="nav nav-second-level">
         <li>
+            <a href="{{route('admin.audit-log.log-activities')}}" class="waves-effect">
+                <span class="hide-menu">Log Activities<span>
+            </a>
+        </li>
+        <li>
             <a href="{{route('admin.audit-log.user')}}" class="waves-effect">
                 <span class="hide-menu">User Logs<span>
             </a>
