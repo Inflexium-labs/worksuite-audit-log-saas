@@ -55,6 +55,9 @@ class LogActivityDataTable extends BaseDataTable
         $endDate = $date->copy()->endOfMonth();
         $model->whereBetween('created_at', [$startDate, $endDate]);
 
+        if(request()->model_name)
+          $model->where('subject_type',request()->model_name);
+ 
         return $model;
     }
 
@@ -102,6 +105,7 @@ class LogActivityDataTable extends BaseDataTable
     {
         return [
             __('app.id')       => ['data' => 'causer_id', 'name' => 'causer_id'],
+            __('Model')        => ['data' => 'subject_type', 'name' => 'subject_type'],
             __('user')         => ['data' => 'user.name', 'name' => 'user.name'],
             __('activity')     => ['data' => 'description', 'name' => 'description'],
             __('properties')   => ['data' => 'properties', 'name' => 'properties'],
