@@ -135,6 +135,14 @@
             <div class="white-box">
                 @section('filter-section')
                 <form>
+                  <div class="form-group">
+                    <select name="model_name" class="form-control">
+                      <option selected value="">Select Model</option>
+                      @foreach ($logModels as $logModel)
+                      <option {{ request('model_name') == $logModel->key ? 'selected' : '' }} value="{{ $logModel->key }}">{{ $logModel->name }}</option>                        
+                      @endforeach
+                    </select>
+                   </div>
                     <div class="form-group">
                         <select name="year" id="year" class="form-control">
                             @foreach (range(date("Y"), 2015) as $year)

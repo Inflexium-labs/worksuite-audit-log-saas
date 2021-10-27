@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Modules\AuditLog\DataTables\TaskLogDataTable;
 use Modules\AuditLog\DataTables\UserLogDataTable;
 use App\Http\Controllers\Admin\AdminBaseController;
+use App\LogModel;
 use Modules\AuditLog\DataTables\ProjectLogDataTable;
 use Modules\AuditLog\DataTables\LogActivityDataTable;
 use DB;
@@ -20,7 +21,7 @@ class AuditLogController extends AdminBaseController
     public function index(Request $request, LogActivityDataTable $dataTables)
     {
         $this->pageTitle = __('All Log');
-
+        $this->logModels = LogModel::get();
         return $dataTables->render('auditlog::log-activities', $this->data);
     }
 

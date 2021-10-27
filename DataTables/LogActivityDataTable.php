@@ -22,9 +22,12 @@ class LogActivityDataTable extends BaseDataTable
             ->eloquent($query)
             ->addIndexColumn()
             ->addColumn('user.name', function ($row) {
-                return '<a target="_blank" href="' . route("admin.employees.show", $row->causer_id) . '">' . $row->user->name . '</a>';
+                return $row->user ? '<a target="_blank" href="' . route("admin.employees.show", $row->causer_id) . '">' . $row->user->name . '</a>' : '-' ;
             })
-            ->addColumn('description', function ($row) {
+            ->editColumn('subject_type', function ($row) {
+                return  Str::afterLast($row->subject_type, '\\').' Model' ;
+            })
+            ->editColumn('description', function ($row) {
                 return  $row->description . ' ' . Str::afterLast($row->subject_type , '\\');;
             })
             ->editColumn('properties', function ($row) {
@@ -48,13 +51,16 @@ class LogActivityDataTable extends BaseDataTable
      */
     public function query()
     {
-        $model = LogActivity::with('user');
-
+        $model = LogActivity::with('user')->select('log_activities.*');
+        
         $date = Carbon::create((request()->year ?? date('Y')) . '-' . (request()->month ?? date('m')) . '-01');
         $startDate = $date->copy()->startOfMonth();
         $endDate = $date->copy()->endOfMonth();
         $model->whereBetween('created_at', [$startDate, $endDate]);
 
+        if(request()->model_name)
+          $model->where('subject_type',request()->model_name);
+ 
         return $model;
     }
 
@@ -101,12 +107,13 @@ class LogActivityDataTable extends BaseDataTable
     protected function getColumns()
     {
         return [
-            __('app.id')       => ['data' => 'causer_id', 'name' => 'causer_id'],
+            __('app.id')       => ['data' => 'causer_id', 'name' => 'log_activities.causer_id'],
+            __('Model')        => ['data' => 'subject_type', 'name' => 'log_activities.subject_type'],
             __('user')         => ['data' => 'user.name', 'name' => 'user.name'],
-            __('activity')     => ['data' => 'description', 'name' => 'description'],
-            __('properties')   => ['data' => 'properties', 'name' => 'properties'],
-            __('IP')           => ['data' => 'ip', 'name' => 'ip'],
-            __('app.date')     => ['data' => 'created_at', 'name' => 'created_at'],
+            __('activity')     => ['data' => 'description', 'name' => 'log_activities.description'],
+            __('properties')   => ['data' => 'properties', 'name' => 'log_activities.properties'],
+            __('IP')           => ['data' => 'ip', 'name' => 'log_activities.ip'],
+            __('app.date')     => ['data' => 'created_at', 'name' => 'log_activities.created_at'],
         ];
     }
 
