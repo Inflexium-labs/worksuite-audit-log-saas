@@ -7,6 +7,7 @@ use App\DataTables\BaseDataTable;
 use App\LogActivity;
 use Yajra\DataTables\Html\Button;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class LogActivityDataTable extends BaseDataTable
 {
@@ -51,17 +52,22 @@ class LogActivityDataTable extends BaseDataTable
      */
     public function query()
     {
-        $model = LogActivity::with('user')->select('log_activities.*');
-        
-        $date = Carbon::create((request()->year ?? date('Y')) . '-' . (request()->month ?? date('m')) . '-01');
-        $startDate = $date->copy()->startOfMonth();
-        $endDate = $date->copy()->endOfMonth();
-        $model->whereBetween('created_at', [$startDate, $endDate]);
+        $logActivity = LogActivity::leftJoin('users', 'users.id', '=', 'log_activities.causer_id')
+        ->select('log_activities.*','users.name as name');
 
-        if(request()->model_name)
-          $model->where('subject_type',request()->model_name);
+       if(request()->daterange)
+       {
+        $dates = explode(' - ', request()->daterange);
+        $startDate = Carbon::create($dates[0] ?? date('Y-m-d'));
+        $endDate = Carbon::create($dates[1] ?? date('Y-m-d'));
+
+        $logActivity = $logActivity->whereBetween('log_activities.created_at', [$startDate->toDateString().' 00:00:00', $endDate->toDateString().' 23:59:59']);
+       }
+
+       if(request()->model_name)
+         $logActivity = $logActivity->where('log_activities.subject_type',request()->model_name);
  
-        return $model;
+        return $logActivity;
     }
 
     /**
@@ -109,7 +115,7 @@ class LogActivityDataTable extends BaseDataTable
         return [
             __('app.id')       => ['data' => 'causer_id', 'name' => 'log_activities.causer_id'],
             __('Model')        => ['data' => 'subject_type', 'name' => 'log_activities.subject_type'],
-            __('user')         => ['data' => 'user.name', 'name' => 'user.name'],
+            __('user')         => ['data' => 'name', 'name' => 'users.name'],
             __('activity')     => ['data' => 'description', 'name' => 'log_activities.description'],
             __('properties')   => ['data' => 'properties', 'name' => 'log_activities.properties'],
             __('IP')           => ['data' => 'ip', 'name' => 'log_activities.ip'],

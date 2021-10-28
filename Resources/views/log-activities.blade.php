@@ -120,6 +120,10 @@
 @endsection
 
 @push('head-script')
+  
+    <link rel="stylesheet" href="{{ asset('plugins/bower_components/custom-select/custom-select.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css">
@@ -136,37 +140,18 @@
                 @section('filter-section')
                 <form>
                   <div class="form-group">
-                    <select name="model_name" class="form-control">
+                    <select name="model_name" class="form-control select2">
                       <option selected value="">Select Model</option>
                       @foreach ($logModels as $logModel)
                       <option {{ request('model_name') == $logModel->key ? 'selected' : '' }} value="{{ $logModel->key }}">{{ $logModel->name }}</option>                        
                       @endforeach
                     </select>
                    </div>
-                    <div class="form-group">
-                        <select name="year" id="year" class="form-control">
-                            @foreach (range(date("Y"), 2015) as $year)
-                                <option value="{{ $year }}"
-                                    {{ request('year') == $year ? 'selected' : '' }}
-                                    {{ request('year') == null && $year == date('Y') ? 'selected' : '' }}>
-                                    {{ $year }}
-                                </option>
-                            @endforeach
-                        </select>
+                   <div class="form-group col-md-12">
+                    <label class="control-label required" for="date">@lang('attendancereport::app.dateRange')</label>
+                    <input type="text" name="daterange" class="form-control" autocomplete="off"
+                        value="{{ request('daterange') ?? (new DateTime())->modify('-1 month')->format('Y-m-d').' - '.now()->format('Y-m-d')}}">
                     </div>
-
-                    <div class="form-group">
-                        <select name="month" id="month" class="form-control">
-                            @for($i = 1 ; $i <= 12; $i++)
-                                <option value="{{ $i }}"
-                                    {{ request('month') == $i ? 'selected' : '' }}
-                                    {{ request('month') == null && $i == date('m') ? 'selected' : '' }}>
-                                    {{ date("F",strtotime((request()->year ?? date("Y"))."-".$i."-01")) }}
-                                </option>
-                            @endfor
-                        </select>
-                    </div>
-
                     <div class="col-md-12">
                         <div class="form-group">
                             <button class="btn btn-success btn-sm col-md-5">
@@ -196,10 +181,28 @@
 <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.0.3/js/dataTables.buttons.min.js"></script>
 <script src="{{ asset('js/datatables/buttons.server-side.js') }}"></script>
+
+<script src="{{ asset('plugins/bower_components/custom-select/custom-select.min.js') }}"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
 {!! $dataTable->scripts() !!}
 
 <script>
 $(document).ready(function() {
+  $('input[name="daterange"]').daterangepicker({
+            opens: 'left',
+            locale: {
+                format: 'YYYY-MM-DD'
+            }
+  });
+
+  $(".select2").select2({
+        formatNoMatches: function() {
+            return "{{ __('messages.noRecordFound') }}";
+        }
+    });
+
   $('.collapse.in').prev('.panel-heading').addClass('active');
   $('#accordion, #bs-collapse')
     .on('show.bs.collapse', function(a) {
