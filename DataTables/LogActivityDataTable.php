@@ -54,11 +54,9 @@ class LogActivityDataTable extends BaseDataTable
     {
         $logActivity = LogActivity::leftJoin('users', 'users.id', '=', 'log_activities.causer_id')
         ->select('log_activities.*','users.name as name');
-        Log::info("message");
 
        if(request()->daterange)
        {
-           Log::info("message2");
         $dates = explode(' - ', request()->daterange);
         $startDate = Carbon::create($dates[0] ?? date('Y-m-d'));
         $endDate = Carbon::create($dates[1] ?? date('Y-m-d'));
