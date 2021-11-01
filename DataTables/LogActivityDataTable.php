@@ -7,7 +7,6 @@ use App\DataTables\BaseDataTable;
 use App\LogActivity;
 use Yajra\DataTables\Html\Button;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 
 class LogActivityDataTable extends BaseDataTable
 {
@@ -29,7 +28,7 @@ class LogActivityDataTable extends BaseDataTable
                 return  Str::afterLast($row->subject_type, '\\').' Model' ;
             })
             ->editColumn('description', function ($row) {
-                return  $row->description . ' ' . Str::afterLast($row->subject_type , '\\');;
+                return  $row->description . ' ' . Str::afterLast($row->subject_type , '\\');
             })
             ->editColumn('properties', function ($row) {
               if($row->properties)
@@ -113,13 +112,13 @@ class LogActivityDataTable extends BaseDataTable
     protected function getColumns()
     {
         return [
-            __('app.id')       => ['data' => 'causer_id', 'name' => 'log_activities.causer_id'],
-            __('Model')        => ['data' => 'subject_type', 'name' => 'log_activities.subject_type'],
-            __('user')         => ['data' => 'name', 'name' => 'users.name'],
-            __('activity')     => ['data' => 'description', 'name' => 'log_activities.description'],
-            __('properties')   => ['data' => 'properties', 'name' => 'log_activities.properties'],
-            __('IP')           => ['data' => 'ip', 'name' => 'log_activities.ip'],
-            __('app.date')     => ['data' => 'created_at', 'name' => 'log_activities.created_at'],
+            __('app._log_activity.id')           => ['data' => 'id', 'name' => 'log_activities.id'],
+            __('app._log_activity.model')        => ['data' => 'subject_type', 'name' => 'log_activities.subject_type'],
+            __('app._log_activity.user')         => ['data' => 'name', 'name' => 'users.name'],
+            __('app._log_activity.activity')     => ['data' => 'description', 'name' => 'log_activities.description'],
+            __('app._log_activity.properties')   => ['data' => 'properties', 'name' => 'log_activities.properties'],
+            __('app._log_activity.ip')           => ['data' => 'ip', 'name' => 'log_activities.ip'],
+            __('app._log_activity.date')         => ['data' => 'created_at', 'name' => 'log_activities.created_at'],
         ];
     }
 

@@ -11,5 +11,6 @@ Route::group(
         Route::get('audit-log/task', 'AuditLogController@task')->name('task');
         Route::get('audit-log/project', 'AuditLogController@project')->name('project');
         Route::get('log-activities', 'AuditLogController@index')->name('log-activities');
+        Route::get('log-activities-export', 'AuditLogController@export')->name('log-activities.export');
     }
 );

@@ -165,6 +165,14 @@
                         </div>
                     </div>
                 </form>
+                <div class="col-md-12">
+                  <div class="form-group p-t-10">
+                      <a href="{{ route('admin.audit-log.log-activities.export',['daterange' => request('daterange'), 'model_name' => request('model_name')]) }}" class="btn btn-inverse col-md-5 btn-sm">
+                          <i class="ti-export" style="padding-right: 5px"></i>
+                          @lang('exportimport::app.export')
+                      </a>
+                  </div>
+              </div>
                 @endsection
                 
                 <div class="table-responsive">
