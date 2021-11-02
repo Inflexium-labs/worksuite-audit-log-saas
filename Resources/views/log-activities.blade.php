@@ -141,14 +141,14 @@
                 <form>
                   <div class="form-group">
                     <select name="model_name" class="form-control select2">
-                      <option selected value="">Select Model</option>
+                      <option selected value="">@lang('auditlog::app.select_model')</option>
                       @foreach ($logModels as $logModel)
                       <option {{ request('model_name') == $logModel->key ? 'selected' : '' }} value="{{ $logModel->key }}">{{ $logModel->name }}</option>                        
                       @endforeach
                     </select>
                    </div>
                    <div class="form-group col-md-12">
-                    <label class="control-label required" for="date">@lang('attendancereport::app.dateRange')</label>
+                    <label class="control-label required" for="date">@lang('auditlog::app.dateRange')</label>
                     <input type="text" name="daterange" class="form-control" autocomplete="off"
                         value="{{ request('daterange') ?? (new DateTime())->modify('-1 month')->format('Y-m-d').' - '.now()->format('Y-m-d')}}">
                     </div>
@@ -169,7 +169,7 @@
                   <div class="form-group p-t-10">
                       <a href="{{ route('admin.audit-log.log-activities.export',['daterange' => request('daterange'), 'model_name' => request('model_name')]) }}" class="btn btn-inverse col-md-5 btn-sm">
                           <i class="ti-export" style="padding-right: 5px"></i>
-                          @lang('exportimport::app.export')
+                          @lang('auditlog::app.export')
                       </a>
                   </div>
               </div>

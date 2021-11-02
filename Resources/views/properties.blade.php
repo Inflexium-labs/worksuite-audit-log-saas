@@ -12,12 +12,12 @@
             <div id="{{ $id }}-col-{{ $loop->iteration  }}" class="panel-collapse collapse">
                 <div class="panel-body">
                   <div>
-                      <h6 style="font-weight: bold">Orginal Value</h6>
+                      <h6 style="font-weight: bold">@lang('auditlog::app.previous_value')</h6>
                       <p>{{ $property['original'] }}</p>
                   </div>
                   <hr>
                   <div>
-                    <h6 style="font-weight: bold">Change Value</h6>
+                    <h6 style="font-weight: bold">@lang('auditlog::app.present_value')</h6>
                     <p>{{ $property['changes'] }}</p>
                 </div>
                 </div>

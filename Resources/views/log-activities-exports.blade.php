@@ -1,13 +1,13 @@
 <table>
     <thead>
     <tr>
-        <th>{{  __('app._log_activity.id') }}</th>
-        <th>{{  __('app._log_activity.model') }}</th>
-        <th>{{  __('app._log_activity.user') }}</th>
-        <th>{{  __('app._log_activity.activity') }}</th>
-        <th>{{  __('app._log_activity.properties') }}</th>
-        <th>{{  __('app._log_activity.ip') }}</th>
-        <th>{{  __('app._log_activity.date') }}</th>
+        <th>{{  __('auditlog::app._log_activity.id') }}</th>
+        <th>{{  __('auditlog::app._log_activity.model') }}</th>
+        <th>{{  __('auditlog::app._log_activity.user') }}</th>
+        <th>{{  __('auditlog::app._log_activity.activity') }}</th>
+        <th>{{  __('auditlog::app._log_activity.properties') }}</th>
+        <th>{{  __('auditlog::app._log_activity.ip') }}</th>
+        <th>{{  __('auditlog::app._log_activity.date') }}</th>
     </tr>
     </thead>
     <tbody>

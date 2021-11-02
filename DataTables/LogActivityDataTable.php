@@ -112,13 +112,13 @@ class LogActivityDataTable extends BaseDataTable
     protected function getColumns()
     {
         return [
-            __('app._log_activity.id')           => ['data' => 'id', 'name' => 'log_activities.id'],
-            __('app._log_activity.model')        => ['data' => 'subject_type', 'name' => 'log_activities.subject_type'],
-            __('app._log_activity.user')         => ['data' => 'name', 'name' => 'users.name'],
-            __('app._log_activity.activity')     => ['data' => 'description', 'name' => 'log_activities.description'],
-            __('app._log_activity.properties')   => ['data' => 'properties', 'name' => 'log_activities.properties'],
-            __('app._log_activity.ip')           => ['data' => 'ip', 'name' => 'log_activities.ip'],
-            __('app._log_activity.date')         => ['data' => 'created_at', 'name' => 'log_activities.created_at'],
+            __('auditlog::app._log_activity.id')           => ['data' => 'id', 'name' => 'log_activities.id'],
+            __('auditlog::app._log_activity.model')        => ['data' => 'subject_type', 'name' => 'log_activities.subject_type'],
+            __('auditlog::app._log_activity.user')         => ['data' => 'name', 'name' => 'users.name'],
+            __('auditlog::app._log_activity.activity')     => ['data' => 'description', 'name' => 'log_activities.description'],
+            __('auditlog::app._log_activity.properties')   => ['data' => 'properties', 'name' => 'log_activities.properties'],
+            __('auditlog::app._log_activity.ip')           => ['data' => 'ip', 'name' => 'log_activities.ip'],
+            __('auditlog::app._log_activity.date')         => ['data' => 'created_at', 'name' => 'log_activities.created_at'],
         ];
     }
 
