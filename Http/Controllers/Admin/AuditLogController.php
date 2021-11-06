@@ -10,7 +10,8 @@ use App\Http\Controllers\Admin\AdminBaseController;
 use App\LogModel;
 use Modules\AuditLog\DataTables\ProjectLogDataTable;
 use Modules\AuditLog\DataTables\LogActivityDataTable;
-use DB;
+use Modules\AuditLog\Exports\LogActivityExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AuditLogController extends AdminBaseController
 {
@@ -24,6 +25,12 @@ class AuditLogController extends AdminBaseController
         $this->logModels = LogModel::get();
         return $dataTables->render('auditlog::log-activities', $this->data);
     }
+
+    public function export()
+    {
+        return Excel::download(new LogActivityExport, 'log-activity.xlsx');
+    }
+
 
      /**
      * Display a listing of the resource.
