@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use App\DataTables\BaseDataTable;
 use App\LogActivity;
 use Yajra\DataTables\Html\Button;
-use Illuminate\Support\Str;
+use Yajra\DataTables\Html\Column;
 
 class AttendanceLogActivityDataTable extends BaseDataTable
 {
@@ -41,11 +41,11 @@ class AttendanceLogActivityDataTable extends BaseDataTable
                 return $row->created_at->format('d M Y - h:i a');
             })
 
-            
-            // ->addColumn('view_mark', function ($data) {
-            //     $actionBtn = '<a class="text-primary h3" href="'.route('admin.employees.show',$data->id).'" class="action-icon"></a>';
-            //     return $actionBtn;
-            // })
+        
+            ->addColumn('action', function ($row) {
+                $action = '<a href="'.  route('admin.attendances.info', $row->attendance_id).'" class="btn btn-sm btn-info view-attendance"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+                return $action;
+            })
 
             ->rawColumns(['name','whom_user_name','properties','action']);
     }
@@ -61,7 +61,7 @@ class AttendanceLogActivityDataTable extends BaseDataTable
         ->leftJoin('attendances', 'attendances.id', '=', 'log_activities.subject_id')
         ->leftJoin('users as whom_user', function ($join) {
             $join->on('whom_user.id', '=', 'attendances.user_id');})
-        ->select('log_activities.*','users.name as name','users.id as user_id','whom_user.name as whom_user_name','whom_user.id as whom_user_id')
+        ->select('log_activities.*','users.name as name','users.id as user_id','whom_user.name as whom_user_name','whom_user.id as whom_user_id','attendances.id as attendance_id')
         ->where('log_activities.subject_type','App\Attendance');
 
        if(request()->daterange)
@@ -125,7 +125,13 @@ class AttendanceLogActivityDataTable extends BaseDataTable
             __('auditlog::app._log_activity.properties')   => ['data' => 'properties', 'name' => 'log_activities.properties'],
             __('auditlog::app._log_activity.ip')           => ['data' => 'ip', 'name' => 'log_activities.ip'],
             __('auditlog::app._log_activity.date')         => ['data' => 'created_at', 'name' => 'log_activities.created_at'],
-            // __('auditlog::app._log_activity.view_mark')    => ['searchable' => false]
+            Column::computed('action', __('auditlog::app._log_activity.view_mark'))
+            ->exportable(false)
+            ->printable(false)
+            ->orderable(false)
+            ->searchable(false)
+            ->width(150)
+            ->addClass('text-center')
         ];
     }
 

@@ -12,6 +12,7 @@ use Modules\AuditLog\DataTables\ProjectLogDataTable;
 use Modules\AuditLog\DataTables\LogActivityDataTable;
 use Modules\AuditLog\DataTables\AttendanceLogActivityDataTable;
 use Modules\AuditLog\Exports\LogActivityExport;
+use Modules\AuditLog\Exports\AttendanceExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AuditLogController extends AdminBaseController
@@ -38,8 +39,13 @@ class AuditLogController extends AdminBaseController
      */
     public function attendance(Request $request, AttendanceLogActivityDataTable $dataTables)
     {
-        $this->pageTitle = __('Attendance Log');
+        $this->pageTitle = __('auditlog::app._log_activity.attendance_logs');
         return $dataTables->render('auditlog::attendance.index', $this->data);
+    }
+
+    public function AttendanceExport()
+    {
+        return Excel::download(new AttendanceExport, 'attendance-activity.xlsx');
     }
 
 
