@@ -14,5 +14,7 @@ return array(
         'properties' => 'Properties',
         'ip'         => 'IP',
         'date'       => 'Date',
+        'for_whom'   => 'for whom',
+        'view_mark'   => 'View Mark'
     ],    
 );

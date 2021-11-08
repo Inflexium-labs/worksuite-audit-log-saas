@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminBaseController;
 use App\LogModel;
 use Modules\AuditLog\DataTables\ProjectLogDataTable;
 use Modules\AuditLog\DataTables\LogActivityDataTable;
+use Modules\AuditLog\DataTables\AttendanceLogActivityDataTable;
 use Modules\AuditLog\Exports\LogActivityExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -29,6 +30,16 @@ class AuditLogController extends AdminBaseController
     public function export()
     {
         return Excel::download(new LogActivityExport, 'log-activity.xlsx');
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @return Response
+     */
+    public function attendance(Request $request, AttendanceLogActivityDataTable $dataTables)
+    {
+        $this->pageTitle = __('Attendance Log');
+        return $dataTables->render('auditlog::attendance.index', $this->data);
     }
 
 

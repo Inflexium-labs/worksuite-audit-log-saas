@@ -12,6 +12,11 @@
             </a>
         </li>
         <li>
+            <a href="{{route('admin.audit-log.log-activities.attendance')}}" class="waves-effect">
+                <span class="hide-menu">Attendance<span>
+            </a>
+        </li>
+        <li>
             <a href="{{route('admin.audit-log.user')}}" class="waves-effect">
                 <span class="hide-menu">User Logs<span>
             </a>
