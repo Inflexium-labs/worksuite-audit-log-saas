@@ -45,7 +45,7 @@ class AttendanceLogActivityDataTable extends BaseDataTable
             ->addColumn('action', function ($row) {
                 if($row->attendance_id)
                 $action = '<a href="'.  route('admin.attendances.info', $row->attendance_id).'" class="btn btn-sm btn-info view-attendance"><i class="fa fa-eye" aria-hidden="true"></i></a>';
-                return $action;
+                return $action ?? '--';
             })
 
             ->rawColumns(['name','whom_user_name','properties','action']);
