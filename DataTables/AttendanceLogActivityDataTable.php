@@ -37,7 +37,7 @@ class AttendanceLogActivityDataTable extends BaseDataTable
 
             ->editColumn('properties', function ($row) {
                 if ($row->properties) {
-                    return view('auditlog::properties')->with('properties', json_decode($row->properties, true))->with('id', $row->id);
+                    return view('auditlog::properties')->with('properties', json_decode($row->properties, true))->with('id', $row->id)->with('global', $this->global);
                 } else
                     return '-';
             })
