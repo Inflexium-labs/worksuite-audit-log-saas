@@ -15,6 +15,9 @@ return array(
         'ip'         => 'IP',
         'date'       => 'Date',
         'for_whom'   => 'for whom',
-        'view_mark'   => 'View Mark'
+        'view_mark'   => 'View Mark',
+        'attendance_logs'   => 'Attendance Logs',
+        'attendance'   => 'Attendance',
+        'log_activities'   => 'Log Activities',
     ],    
 );

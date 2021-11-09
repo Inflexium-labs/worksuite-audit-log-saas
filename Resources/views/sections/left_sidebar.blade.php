@@ -8,12 +8,12 @@
     <ul class="nav nav-second-level">
         <li>
             <a href="{{route('admin.audit-log.log-activities')}}" class="waves-effect">
-                <span class="hide-menu">Log Activities<span>
+                <span class="hide-menu">{{ __('auditlog::app._log_activity.log_activities') }}<span>
             </a>
         </li>
         <li>
-            <a href="{{route('admin.audit-log.log-activities.attendance')}}" class="waves-effect">
-                <span class="hide-menu">Attendance<span>
+            <a href="{{route('admin.audit-log.attendance')}}" class="waves-effect">
+                <span class="hide-menu">{{ __('auditlog::app._log_activity.attendance') }}<span>
             </a>
         </li>
         <li>

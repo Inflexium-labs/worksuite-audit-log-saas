@@ -134,7 +134,6 @@
 
 @section('content')
     <div class="row">
-
         <div class="col-md-12">
             <div class="white-box">
                 @section('filter-section')
@@ -159,7 +158,7 @@
                 </form>
                 <div class="col-md-12">
                   <div class="form-group p-t-10">
-                      <a href="{{ route('admin.audit-log.log-activities.export',['daterange' => request('daterange'), 'model_name' => request('model_name')]) }}" class="btn btn-inverse col-md-5 btn-sm">
+                      <a href="{{ route('admin.audit-log.attendance-export',['daterange' => request('daterange')]) }}" class="btn btn-inverse col-md-5 btn-sm">
                           <i class="ti-export" style="padding-right: 5px"></i>
                           @lang('auditlog::app.export')
                       </a>
@@ -173,6 +172,28 @@
             </div>
         </div>
     </div>
+    {{-- Ajax Modal --}}
+<div class="modal fade bs-modal-md in" id="attModal" role="dialog" aria-labelledby="importModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-md" id="modal-data-application">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <span class="caption-subject font-red-sunglo bold uppercase" id="modelHeading"></span>
+        </div>
+        <div class="modal-body">
+            @lang('app.loading')
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn default" data-dismiss="modal">@lang('app.close')</button>
+            <button type="button" class="btn blue">@lang('app.save')</button>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->.
+</div>
+{{-- Ajax Modal Ends --}}
     <!-- .row -->
 @endsection
 
@@ -189,7 +210,21 @@
 {!! $dataTable->scripts() !!}
 
 <script>
+function editAttendance(id) {
+    var url = '{!! route('admin.attendances.edit', [':id']) !!}?attReport=true';
+    url = url.replace(':id', id);
+    $('#modelHeading').html('{{ __('app.menu.attendance') }}');
+    $.ajaxModal('#projectTimerModal', url);
+}
 $(document).ready(function() {
+
+ $(document.body).on('click', '.view-attendance', function(ev){
+    ev.preventDefault();
+    let url = $(this).attr('href');
+    $('#modelHeading').html('{{ __('app.menu.attendance') }}');
+    $.ajaxModal('#projectTimerModal', url);
+});
+
   $('input[name="daterange"]').daterangepicker({
             opens: 'left',
             locale: {
