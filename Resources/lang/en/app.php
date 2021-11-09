@@ -16,8 +16,8 @@ return array(
         'date'       => 'Date',
         'for_whom'   => 'for whom',
         'view_mark'   => 'View Mark',
-        'attendance_logs'   => 'Attendance Logs',
-        'attendance'   => 'Attendance',
+        'attendanceLogs'   => 'Attendance Logs',
+        'attendanceLog'   => 'Attendance',
         'log_activities'   => 'Log Activities',
     ],    
 );
