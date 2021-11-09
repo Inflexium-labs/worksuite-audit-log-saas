@@ -13,7 +13,7 @@
         </li>
         <li>
             <a href="{{route('admin.audit-log.attendance')}}" class="waves-effect">
-                <span class="hide-menu">{{ __('auditlog::app._log_activity.attendance') }}<span>
+                <span class="hide-menu">{{ __('auditlog::app._log_activity.attendanceLogs') }}<span>
             </a>
         </li>
         <li>
