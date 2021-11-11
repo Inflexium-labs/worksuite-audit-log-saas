@@ -17,6 +17,16 @@
             </a>
         </li>
         <li>
+            <a href="{{route('admin.audit-log.leave')}}" class="waves-effect">
+                <span class="hide-menu">{{ __('auditlog::app._log_activity.leaveLogs') }}<span>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('admin.audit-log.incident')}}" class="waves-effect">
+                <span class="hide-menu">{{ __('auditlog::app._log_activity.incident') }}<span>
+            </a>
+        </li>
+        <li>
             <a href="{{route('admin.audit-log.user')}}" class="waves-effect">
                 <span class="hide-menu">User Logs<span>
             </a>

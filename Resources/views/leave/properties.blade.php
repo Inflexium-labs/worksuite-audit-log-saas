@@ -15,13 +15,13 @@
                         <div class="panel-body">
                             <div>
                                 <h6 style="font-weight: bold">@lang('auditlog::app.previous_value')</h6>
-                                <p>{{ in_array($key, ['clock_in_time', 'clock_out_time', 'leave_date']) ? \Carbon\Carbon::create($property['original'])->format($global->date_format . ' ' . $global->time_format) : $property['original'] }}
+                                <p>{{ in_array($key, ['leave_date']) ? \Carbon\Carbon::create($property['original'])->format($global->date_format) : $property['original'] }}
                                 </p>
                             </div>
                             <hr>
                             <div>
                                 <h6 style="font-weight: bold">@lang('auditlog::app.present_value')</h6>
-                                <p>{{ in_array($key, ['clock_in_time', 'clock_out_time', 'leave_date']) ? \Carbon\Carbon::create($property['original'])->format($global->date_format . ' ' . $global->time_format) : $property['changes'] }}
+                                <p>{{ in_array($key, ['leave_date']) ? \Carbon\Carbon::create($property['original'])->format($global->date_format) : $property['changes'] }}
                                 </p>
                             </div>
                         </div>

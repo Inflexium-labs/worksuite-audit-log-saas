@@ -6,9 +6,9 @@ use Carbon\Carbon;
 use App\DataTables\BaseDataTable;
 use App\LogActivity;
 use Yajra\DataTables\Html\Button;
-use Illuminate\Support\Str;
+use Yajra\DataTables\Html\Column;
 
-class LogActivityDataTable extends BaseDataTable
+class LeaveLogDataTable extends BaseDataTable
 {
     /**
      * Build DataTable class.
@@ -20,29 +20,39 @@ class LogActivityDataTable extends BaseDataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addIndexColumn()
-            ->addColumn('user.name', function ($row) {
-                return $row->user ? '<a target="_blank" href="' . route("admin.employees.show", $row->causer_id) . '">' . $row->user->name . '</a>' : '-' ;
+
+            ->editColumn('name', function ($row) {
+                if (!$row->user_id)
+                    return '--';
+
+                return '<a target="_blank" href="' . route("admin.employees.show", $row->user_id) . '">' . $row->name . '</a>';
             })
-            ->editColumn('subject_type', function ($row) {
-                return  Str::afterLast($row->subject_type, '\\').' Model' ;
+
+            ->editColumn('whom_user_name', function ($row) {
+                if (!$row->whom_user_id)
+                    return '--';
+
+                return '<a target="_blank" href="' . route("admin.employees.show", $row->whom_user_id) . '">' . $row->whom_user_name . '</a>';
             })
-            ->editColumn('description', function ($row) {
-                return  $row->description;
-            })
+
             ->editColumn('properties', function ($row) {
-              if($row->properties)
-              {
-                  $global = global_settings();
-                return view('auditlog::properties')->with('properties',json_decode($row->properties,true))->with('id',$row->id)->with('global', $global);
-              }
-              else 
-                return '-';
+                if ($row->properties && $row->log_name != 'created') {
+                    return view('auditlog::leave.properties')->with('properties', json_decode($row->properties, true))->with('id', $row->id)->with('global', $this->global);
+                } else
+                    return '--';
             })
             ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d M Y - h:i a');
             })
-            ->rawColumns(['user.name','properties']);
+
+
+            ->addColumn('action', function ($row) {
+                if ($row->subject_id)
+                    $action = '<a href="javascript:;" data-leave-id="' . $row->subject_id . '" class="btn btn-sm btn-info show-leave"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+                return $action ?? '--';
+            })
+
+            ->rawColumns(['name', 'whom_user_name', 'properties', 'action']);
     }
 
     /**
@@ -53,20 +63,21 @@ class LogActivityDataTable extends BaseDataTable
     public function query()
     {
         $logActivity = LogActivity::leftJoin('users', 'users.id', '=', 'log_activities.causer_id')
-        ->select('log_activities.*','users.name as name');
+            ->leftJoin('leaves', 'leaves.id', '=', 'log_activities.subject_id')
+            ->leftJoin('users as whom_user', function ($join) {
+                $join->on('whom_user.id', '=', 'leaves.user_id');
+            })
+            ->select('log_activities.*', 'users.name as name', 'users.id as user_id', 'whom_user.name as whom_user_name', 'whom_user.id as whom_user_id', 'leaves.id as leave_id')
+            ->where('log_activities.subject_type', 'App\Leave');
 
-       if(request()->daterange)
-       {
-        $dates = explode(' - ', request()->daterange);
-        $startDate = Carbon::create($dates[0] ?? date('Y-m-d'));
-        $endDate = Carbon::create($dates[1] ?? date('Y-m-d'));
+        if (request()->daterange) {
+            $dates = explode(' - ', request()->daterange);
+            $startDate = Carbon::create($dates[0] ?? date('Y-m-d'));
+            $endDate = Carbon::create($dates[1] ?? date('Y-m-d'));
 
-        $logActivity = $logActivity->whereBetween('log_activities.created_at', [$startDate->toDateString().' 00:00:00', $endDate->toDateString().' 23:59:59']);
-       }
+            $logActivity = $logActivity->whereBetween('log_activities.created_at', [$startDate->toDateString() . ' 00:00:00', $endDate->toDateString() . ' 23:59:59']);
+        }
 
-       if(request()->model_name)
-         $logActivity = $logActivity->where('log_activities.subject_type',request()->model_name);
- 
         return $logActivity;
     }
 
@@ -113,13 +124,19 @@ class LogActivityDataTable extends BaseDataTable
     protected function getColumns()
     {
         return [
-            __('auditlog::app._log_activity.id')           => ['data' => 'id', 'name' => 'log_activities.id'],
-            __('auditlog::app._log_activity.model')        => ['data' => 'subject_type', 'name' => 'log_activities.subject_type'],
             __('auditlog::app._log_activity.user')         => ['data' => 'name', 'name' => 'users.name'],
             __('auditlog::app._log_activity.activity')     => ['data' => 'description', 'name' => 'log_activities.description'],
+            __('auditlog::app._log_activity.for_whom')     => ['data' => 'whom_user_name', 'name' => 'whom_user.name'],
             __('auditlog::app._log_activity.properties')   => ['data' => 'properties', 'name' => 'log_activities.properties'],
             __('auditlog::app._log_activity.ip')           => ['data' => 'ip', 'name' => 'log_activities.ip'],
             __('auditlog::app._log_activity.date')         => ['data' => 'created_at', 'name' => 'log_activities.created_at'],
+            Column::computed('action', __('auditlog::app._log_activity.view_mark'))
+                ->exportable(false)
+                ->printable(false)
+                ->orderable(false)
+                ->searchable(false)
+                ->width(150)
+                ->addClass('text-center')
         ];
     }
 
