@@ -17,7 +17,9 @@ return array(
         'for_whom'   => 'for whom',
         'view_mark'   => 'View Mark',
         'attendance_logs'   => 'Attendance Logs',
+        'incident_logs'   => 'Incident Logs',
         'attendance'   => 'Attendance',
+        'incident'   => 'Incident',
         'log_activities'   => 'Log Activities',
     ],    
 );
