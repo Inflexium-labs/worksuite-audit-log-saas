@@ -50,7 +50,7 @@ class AuditLogController extends AdminBaseController
      */
     public function attendance(Request $request, AttendanceLogActivityDataTable $dataTables)
     {
-        $this->pageTitle = __('auditlog::app._log_activity.attendance_logs');
+        $this->pageTitle = __('auditlog::app._log_activity.attendanceLogs');
         return $dataTables->render('auditlog::attendance.index', $this->data);
     }
 

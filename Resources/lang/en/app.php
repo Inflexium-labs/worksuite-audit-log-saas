@@ -20,6 +20,8 @@ return array(
         'incident_logs'   => 'Incident Logs',
         'attendance'   => 'Attendance',
         'incident'   => 'Incident',
+        'attendanceLogs'   => 'Attendance Logs',
+        'attendanceLog'   => 'Attendance',
         'log_activities'   => 'Log Activities',
     ],    
 );
