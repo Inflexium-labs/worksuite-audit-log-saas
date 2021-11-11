@@ -23,17 +23,17 @@
         </li>
         <li>
             <a href="{{route('admin.audit-log.incident')}}" class="waves-effect">
-                <span class="hide-menu">{{ __('auditlog::app._log_activity.incident') }}<span>
+                <span class="hide-menu">{{ __('auditlog::app._log_activity.incidentLogs') }}<span>
             </a>
         </li>
         <li>
             <a href="{{route('admin.audit-log.user')}}" class="waves-effect">
-                <span class="hide-menu">User Logs<span>
+                <span class="hide-menu">{{ __('auditlog::app._log_activity.userLogs') }}<span>
             </a>
         </li>
         <li>
             <a href="{{route('admin.audit-log.task')}}" class="waves-effect">
-                <span class="hide-menu">Task Logs<span>
+                <span class="hide-menu">{{ __('auditlog::app._log_activity.taskLogs') }}<span>
             </a>
         </li>
         <li>
