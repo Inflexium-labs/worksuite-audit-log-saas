@@ -19,5 +19,6 @@ return array(
         'attendanceLogs'   => 'Attendance Logs',
         'attendanceLog'   => 'Attendance',
         'log_activities'   => 'Log Activities',
+        'leaveLogs' => 'Leave Logs'
     ],    
 );
