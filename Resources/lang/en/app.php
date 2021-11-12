@@ -19,10 +19,12 @@ return array(
         'attendance_logs'   => 'Attendance Logs',
         'incident_logs'   => 'Incident Logs',
         'attendance'   => 'Attendance',
-        'incident'   => 'Incident',
+        'incidentLogs'   => 'Incident Logs',
         'attendanceLogs'   => 'Attendance Logs',
         'attendanceLog'   => 'Attendance',
         'log_activities'   => 'Log Activities',
-        'leaveLogs' => 'Leave Logs'
+        'leaveLogs' => 'Leave Logs',
+        'userLogs' => 'User Logs',
+        'taskLogs' => 'Task Logs'
     ],    
 );

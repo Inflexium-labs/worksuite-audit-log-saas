@@ -18,12 +18,15 @@ class LeaveLogsController extends AdminBaseController
     public function index(LeaveLogDataTable $dataTables)
     {
         $this->pageTitle = __('auditlog::app._log_activity.leaveLogs');
+        dateRangeValidate();
 
         return $dataTables->render('auditlog::leave.index', $this->data);
     }
 
     public function export()
     {
+        dateRangeValidate();
+        
         return Excel::download(new LeaveExport, 'leave-activities.xlsx');
     }
 

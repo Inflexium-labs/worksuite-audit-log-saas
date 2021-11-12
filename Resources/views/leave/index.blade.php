@@ -142,7 +142,10 @@
                     <div class="form-group col-md-12">
                         <label class="control-label required" for="date">@lang('auditlog::app.dateRange')</label>
                         <input type="text" name="daterange" class="form-control" autocomplete="off"
-                            value="{{ request('daterange') ?? (new DateTime())->modify('-1 month')->format('Y-m-d') . ' - ' . now()->format('Y-m-d') }}">
+                            value="{{ request('daterange') ??
+    now()->subMonth()->format($global->date_format) .
+        ' - ' .
+        now()->format($global->date_format) }}">
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
@@ -223,10 +226,14 @@
             $.ajaxModal('#leave-details', url);
         });
 
+        @if (session()->has('error_date'))
+            toastr.error('{{ session()->get('error_date') }}');
+        @endif
+
         $('input[name="daterange"]').daterangepicker({
             opens: 'left',
             locale: {
-                format: 'YYYY-MM-DD'
+                format: '{{ strtoupper($global->date_picker_format) }}'
             }
         });
 

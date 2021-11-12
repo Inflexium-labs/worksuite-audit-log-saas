@@ -22,27 +22,25 @@ class LogActivityDataTable extends BaseDataTable
             ->eloquent($query)
             ->addIndexColumn()
             ->addColumn('user.name', function ($row) {
-                return $row->user ? '<a target="_blank" href="' . route("admin.employees.show", $row->causer_id) . '">' . $row->user->name . '</a>' : '-' ;
+                return $row->user ? '<a target="_blank" href="' . route("admin.employees.show", $row->causer_id) . '">' . $row->user->name . '</a>' : '-';
             })
             ->editColumn('subject_type', function ($row) {
-                return  Str::afterLast($row->subject_type, '\\').' Model' ;
+                return  Str::afterLast($row->subject_type, '\\') . ' Model';
             })
             ->editColumn('description', function ($row) {
                 return  $row->description;
             })
             ->editColumn('properties', function ($row) {
-              if($row->properties)
-              {
-                  $global = global_settings();
-                return view('auditlog::properties')->with('properties',json_decode($row->properties,true))->with('id',$row->id)->with('global', $global);
-              }
-              else 
-                return '-';
+                if ($row->properties && $row->log_name != 'created' && $row->log_name != 'created') {
+                    $global = global_settings();
+                    return view('auditlog::properties')->with('properties', json_decode($row->properties, true))->with('id', $row->id)->with('global', $global);
+                } else
+                    return '--';
             })
             ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d M Y - h:i a');
             })
-            ->rawColumns(['user.name','properties']);
+            ->rawColumns(['user.name', 'properties']);
     }
 
     /**
@@ -53,20 +51,21 @@ class LogActivityDataTable extends BaseDataTable
     public function query()
     {
         $logActivity = LogActivity::leftJoin('users', 'users.id', '=', 'log_activities.causer_id')
-        ->select('log_activities.*','users.name as name');
+            ->select('log_activities.*', 'users.name as name');
 
-       if(request()->daterange)
-       {
-        $dates = explode(' - ', request()->daterange);
-        $startDate = Carbon::create($dates[0] ?? date('Y-m-d'));
-        $endDate = Carbon::create($dates[1] ?? date('Y-m-d'));
+        if (request()->daterange)
+            $dates = explode(' - ', request()->daterange);
+        $startCreate = now()->subMonth()->format($this->global->date_format);
+        $endCreate = now()->format($this->global->date_format);
+        $startDate = Carbon::createFromFormat($this->global->date_format, $dates[0] ?? $startCreate);
+        $endDate = Carbon::createFromFormat($this->global->date_format, $dates[1] ?? $endCreate);
 
-        $logActivity = $logActivity->whereBetween('log_activities.created_at', [$startDate->toDateString().' 00:00:00', $endDate->toDateString().' 23:59:59']);
-       }
+        $logActivity = $logActivity->whereBetween('log_activities.created_at', [$startDate->toDateString() . ' 00:00:00', $endDate->toDateString() . ' 23:59:59']);
 
-       if(request()->model_name)
-         $logActivity = $logActivity->where('log_activities.subject_type',request()->model_name);
- 
+
+        if (request()->model_name)
+            $logActivity = $logActivity->where('log_activities.subject_type', request()->model_name);
+
         return $logActivity;
     }
 
