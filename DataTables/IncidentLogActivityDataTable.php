@@ -30,12 +30,12 @@ class IncidentLogActivityDataTable extends BaseDataTable
             })
     
             ->editColumn('properties', function ($row) {
-              if($row->properties)
+              if($row->properties && $row->log_name != 'created')
               {
                 return view('auditlog::properties')->with('properties',json_decode($row->properties,true))->with('id',$row->id);
               }
               else 
-                return '-';
+                return '--';
             })
             ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d M Y - h:i a');

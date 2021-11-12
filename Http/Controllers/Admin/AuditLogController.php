@@ -26,11 +26,15 @@ class AuditLogController extends AdminBaseController
     {
         $this->pageTitle = __('All Log');
         $this->logModels = LogModel::get();
+        dateRangeValidate();
+
         return $dataTables->render('auditlog::log-activities', $this->data);
     }
 
     public function export()
     {
+        dateRangeValidate();
+        
         return Excel::download(new LogActivityExport, 'log-activity.xlsx');
     }
 
@@ -41,6 +45,8 @@ class AuditLogController extends AdminBaseController
     public function incident (Request $request, IncidentLogActivityDataTable $dataTables)
     {
         $this->pageTitle = __('auditlog::app._log_activity.incident_logs');
+        dateRangeValidate();
+
         return $dataTables->render('auditlog::incident.index', $this->data);
     }
 
@@ -51,11 +57,15 @@ class AuditLogController extends AdminBaseController
     public function attendance(Request $request, AttendanceLogActivityDataTable $dataTables)
     {
         $this->pageTitle = __('auditlog::app._log_activity.attendanceLogs');
+        dateRangeValidate();
+
         return $dataTables->render('auditlog::attendance.index', $this->data);
     }
 
     public function AttendanceExport()
     {
+        dateRangeValidate();
+
         return Excel::download(new AttendanceExport, 'attendance-activity.xlsx');
     }
 
