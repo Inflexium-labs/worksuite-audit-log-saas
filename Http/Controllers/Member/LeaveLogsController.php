@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\AuditLog\Http\Controllers\Admin;
+namespace Modules\AuditLog\Http\Controllers\Member;
 
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\AuditLog\Exports\LeaveExport;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\AuditLog\DataTables\LeaveLogDataTable;
-use App\Http\Controllers\Admin\AdminBaseController;
+use App\Http\Controllers\Member\MemberBaseController;
 
-class LeaveLogsController extends AdminBaseController
+class LeaveLogsController extends MemberBaseController
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +20,7 @@ class LeaveLogsController extends AdminBaseController
         $this->pageTitle = __('auditlog::app._log_activity.leaveLogs');
         dateRangeValidate();
 
-        return $dataTables->render('auditlog::admin.leave.index', $this->data);
+        return $dataTables->render('auditlog::member.leave.index', $this->data);
     }
 
     public function export()
