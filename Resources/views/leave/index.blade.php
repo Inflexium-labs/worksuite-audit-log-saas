@@ -230,10 +230,22 @@
             toastr.error('{{ session()->get('error_date') }}');
         @endif
 
+        @if (app()->getLocale() == 'es')
+            let days = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+            let monthNames =
+            ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+        @else
+            let days = ["Do","Lu","Ma","Mi","Ju","Vi","Sa"];
+            let monthNames =
+            ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        @endif
+
         $('input[name="daterange"]').daterangepicker({
             opens: 'left',
             locale: {
-                format: '{{ strtoupper($global->date_picker_format) }}'
+                format: '{{ daterangeFormat($global->date_picker_format) }}',
+                "daysOfWeek": days,
+                "monthNames": monthNames,
             }
         });
 
