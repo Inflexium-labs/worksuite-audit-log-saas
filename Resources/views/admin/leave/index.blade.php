@@ -162,7 +162,7 @@
                 </form>
                 <div class="col-md-12">
                     <div class="form-group p-t-10">
-                        <a href="{{ route('admin.audit-log.attendance-export', ['daterange' => request('daterange')]) }}"
+                        <a href="{{ route('admin.audit-log.leave-export', ['daterange' => request('daterange')]) }}"
                             class="btn btn-inverse col-md-5 btn-sm">
                             <i class="ti-export" style="padding-right: 5px"></i>
                             @lang('auditlog::app.export')
@@ -178,7 +178,7 @@
     </div>
 </div>
 {{-- Ajax Modal --}}
-<div class="modal fade bs-modal-md in" id="attModal" role="dialog" aria-labelledby="importModalLabel"
+<div class="modal fade bs-modal-md in" id="leave-details" role="dialog" aria-labelledby="importModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-md" id="modal-data-application">
         <div class="modal-content">
@@ -215,19 +215,15 @@
 {!! $dataTable->scripts() !!}
 
 <script>
-    function editAttendance(id) {
-        var url = '{!! route('admin.attendances.edit', [':id']) !!}?attReport=true';
-        url = url.replace(':id', id);
-        $('#modelHeading').html('{{ __('app.menu.attendance') }}');
-        $.ajaxModal('#projectTimerModal', url);
-    }
     $(document).ready(function() {
+        $('body').on('click', '.show-leave', function() {
+            var leaveId = $(this).data('leave-id');
 
-        $(document.body).on('click', '.view-attendance', function(ev) {
-            ev.preventDefault();
-            let url = $(this).attr('href');
-            $('#modelHeading').html('{{ __('app.menu.attendance') }}');
-            $.ajaxModal('#projectTimerModal', url);
+            var url = '{{ route('admin.leaves.show', ':id') }}';
+            url = url.replace(':id', leaveId);
+
+            $('#modelHeading').html('Leave Details');
+            $.ajaxModal('#leave-details', url);
         });
 
         @if (session()->has('error_date'))
@@ -237,7 +233,7 @@
         $('input[name="daterange"]').daterangepicker({
             opens: 'left',
             locale: {
-                format: '{{ strtoupper($global->date_picker_format) }}'
+                format: '{{ daterangeFormat($global->date_picker_format) }}'
             }
         });
 

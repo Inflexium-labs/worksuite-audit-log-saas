@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\AuditLog\Http\Controllers\Admin;
+namespace Modules\AuditLog\Http\Controllers\Member;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\AuditLog\DataTables\TaskLogDataTable;
 use Modules\AuditLog\DataTables\UserLogDataTable;
-use App\Http\Controllers\Admin\AdminBaseController;
+use App\Http\Controllers\Member\MemberBaseController;
 use App\LogModel;
 use Modules\AuditLog\DataTables\ProjectLogDataTable;
 use Modules\AuditLog\DataTables\LogActivityDataTable;
@@ -16,7 +16,7 @@ use Modules\AuditLog\Exports\LogActivityExport;
 use Modules\AuditLog\Exports\AttendanceExport;
 use Maatwebsite\Excel\Facades\Excel;
 
-class AuditLogController extends AdminBaseController
+class AuditLogController extends MemberBaseController
 {
     /**
      * Display a listing of the resource.
@@ -24,11 +24,13 @@ class AuditLogController extends AdminBaseController
      */
     public function index(Request $request, LogActivityDataTable $dataTables)
     {
+        user()->cans('edit_team') || abort(403, __('app.noPermission'));
+        
         $this->pageTitle = __('All Log');
         $this->logModels = LogModel::get();
         dateRangeValidate();
 
-        return $dataTables->render('auditlog::admin.log-activities', $this->data);
+        return $dataTables->render('auditlog::member.log-activities', $this->data);
     }
 
     public function export()
@@ -47,7 +49,7 @@ class AuditLogController extends AdminBaseController
         $this->pageTitle = __('auditlog::app._log_activity.incident_logs');
         dateRangeValidate();
 
-        return $dataTables->render('auditlog::admin.incident.index', $this->data);
+        return $dataTables->render('auditlog::member.incident.index', $this->data);
     }
 
     /**
@@ -59,7 +61,7 @@ class AuditLogController extends AdminBaseController
         $this->pageTitle = __('auditlog::app._log_activity.attendanceLogs');
         dateRangeValidate();
 
-        return $dataTables->render('auditlog::admin.attendance.index', $this->data);
+        return $dataTables->render('auditlog::member.attendance.index', $this->data);
     }
 
     public function AttendanceExport()
@@ -78,7 +80,7 @@ class AuditLogController extends AdminBaseController
     {
         $this->pageTitle = __('User Log');
 
-        return $dataTables->render('auditlog::admin.user', $this->data);
+        return $dataTables->render('auditlog::member.user', $this->data);
     }
 
     /**
@@ -89,7 +91,7 @@ class AuditLogController extends AdminBaseController
     {
         $this->pageTitle = __('Task Log');
 
-        return $dataTables->render('auditlog::admin.task', $this->data);
+        return $dataTables->render('auditlog::member.task', $this->data);
     }
 
     /**
@@ -100,6 +102,6 @@ class AuditLogController extends AdminBaseController
     {
         $this->pageTitle = __('Project Log');
 
-        return $dataTables->render('auditlog::admin.project', $this->data);
+        return $dataTables->render('auditlog::member.project', $this->data);
     }
 }

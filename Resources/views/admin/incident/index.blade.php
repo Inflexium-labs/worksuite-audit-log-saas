@@ -160,15 +160,14 @@
                         </div>
                     </div>
                 </form>
-                <div class="col-md-12">
-                    <div class="form-group p-t-10">
-                        <a href="{{ route('admin.audit-log.attendance-export', ['daterange' => request('daterange')]) }}"
-                            class="btn btn-inverse col-md-5 btn-sm">
-                            <i class="ti-export" style="padding-right: 5px"></i>
-                            @lang('auditlog::app.export')
-                        </a>
-                    </div>
-                </div>
+                {{-- <div class="col-md-12">
+                  <div class="form-group p-t-10">
+                      <a href="{{ route('admin.audit-log.attendance-export',['daterange' => request('daterange')]) }}" class="btn btn-inverse col-md-5 btn-sm">
+                          <i class="ti-export" style="padding-right: 5px"></i>
+                          @lang('auditlog::app.export')
+                      </a>
+                  </div>
+                </div> --}}
             @endsection
 
             <div class="table-responsive">
@@ -178,7 +177,7 @@
     </div>
 </div>
 {{-- Ajax Modal --}}
-<div class="modal fade bs-modal-md in" id="attModal" role="dialog" aria-labelledby="importModalLabel"
+<div class="modal fade bs-modal-md in" id="incidentModal" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-md" id="modal-data-application">
         <div class="modal-content">
@@ -187,11 +186,11 @@
                 <span class="caption-subject font-red-sunglo bold uppercase" id="modelHeading"></span>
             </div>
             <div class="modal-body">
-                @lang('app.loading')
+                @lang('incident::app.loading')
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn default" data-dismiss="modal">@lang('app.close')</button>
-                <button type="button" class="btn blue">@lang('app.save')</button>
+                <button type="button" class="btn default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn blue">Save changes</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -215,19 +214,12 @@
 {!! $dataTable->scripts() !!}
 
 <script>
-    function editAttendance(id) {
-        var url = '{!! route('admin.attendances.edit', [':id']) !!}?attReport=true';
-        url = url.replace(':id', id);
-        $('#modelHeading').html('{{ __('app.menu.attendance') }}');
-        $.ajaxModal('#projectTimerModal', url);
-    }
     $(document).ready(function() {
 
-        $(document.body).on('click', '.view-attendance', function(ev) {
+        $(document.body).on('click', '.view-assigned-incident', function(ev) {
             ev.preventDefault();
             let url = $(this).attr('href');
-            $('#modelHeading').html('{{ __('app.menu.attendance') }}');
-            $.ajaxModal('#projectTimerModal', url);
+            $.ajaxModal('#incidentModal', url);
         });
 
         @if (session()->has('error_date'))
@@ -237,7 +229,7 @@
         $('input[name="daterange"]').daterangepicker({
             opens: 'left',
             locale: {
-                format: '{{ strtoupper($global->date_picker_format) }}'
+                format: '{{ daterangeFormat($global->date_picker_format) }}'
             }
         });
 
