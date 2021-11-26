@@ -152,7 +152,10 @@
                     <div class="form-group col-md-12">
                         <label class="control-label required" for="date">@lang('auditlog::app.dateRange')</label>
                         <input type="text" name="daterange" class="form-control" autocomplete="off"
-                            value="{{ request('daterange') ?? now()->subMonth()->format($global->date_format) . ' - ' . now()->format($global->date_format) }}">
+                            value="{{ request('daterange') ??
+    now()->subMonth()->format($global->date_format) .
+        ' - ' .
+        now()->format($global->date_format) }}">
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
@@ -201,22 +204,12 @@
 
 <script>
     $(document).ready(function() {
-        @if (app()->getLocale() == 'es')
-            let days = ["Su","Mo","Tu","We","Th","Fr","Sa"];
-            let monthNames =
-            ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-        @else
-            let days = ["Do","Lu","Ma","Mi","Ju","Vi","Sa"];
-            let monthNames =
-            ["January","February","March","April","May","June","July","August","September","October","November","December"];
-        @endif
-
         $('input[name="daterange"]').daterangepicker({
             opens: 'left',
             locale: {
                 format: '{{ daterangeFormat($global->date_picker_format) }}',
-                "daysOfWeek": days,
-                "monthNames": monthNames,
+                daysOfWeek: [{!! arrayFormatJs(__('app.dayNames')) !!}],
+                monthNames: [{!! arrayFormatJs(__('app.monthNames')) !!}],
             }
         });
 
