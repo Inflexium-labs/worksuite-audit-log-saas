@@ -9,9 +9,6 @@
         "Modules\\AuditLog\\Providers\\AuditLogServiceProvider"
     ],
     "aliases":{},
-    "files": [
-        "start.php"
-    ],
     "permissions": [
         
     ],
