@@ -43,7 +43,7 @@ class IncidentLogActivityDataTable extends BaseDataTable
 
         
             ->addColumn('action', function ($row) {
-                $action = '<a href="'.  route('admin.incidents.calendarView', $row->assigned_incidents_id).'" class="btn btn-sm btn-info view-attendance"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+                $action = '<a href="'.  route('admin.incidents.calendarView', $row->assigned_incidents_id).'" class="btn btn-sm btn-info view-assigned-incident"><i class="fa fa-eye" aria-hidden="true"></i></a>';
                 return $action;
             })
 
@@ -61,19 +61,21 @@ class IncidentLogActivityDataTable extends BaseDataTable
         ->leftJoin('assigned_incidents', 'assigned_incidents.id', '=', 'log_activities.subject_id')
         ->leftJoin('users as whom_user', function ($join) {
             $join->on('whom_user.id', '=', 'assigned_incidents.user_id');})
-        ->select('log_activities.*','users.name as name','users.id as user_id','whom_user.name as whom_user_name','whom_user.id as whom_user_id','assigned_incidents.id as assigned_incidents_id')
         ->where('log_activities.subject_type','Modules\Incident\Entities\AssignedIncident');
 
-       if(request()->daterange)
+        if (request()->daterange)
        {
         $dates = explode(' - ', request()->daterange);
-        $startDate = Carbon::create($dates[0] ?? date('Y-m-d'));
-        $endDate = Carbon::create($dates[1] ?? date('Y-m-d'));
+        $startCreate = now()->subMonth()->format($this->global->date_format);
+        $endCreate = now()->format($this->global->date_format);
+        $startDate = Carbon::createFromFormat($this->global->date_format, $dates[0] ?? $startCreate);
+        $endDate = Carbon::createFromFormat($this->global->date_format, $dates[1] ?? $endCreate);
 
-        $logActivity = $logActivity->whereBetween('log_activities.created_at', [$startDate->toDateString().' 00:00:00', $endDate->toDateString().' 23:59:59']);
+        $logActivity = $logActivity->whereBetween('log_activities.created_at', [$startDate->toDateString() . ' 00:00:00', $endDate->toDateString() . ' 23:59:59']);
        }
 
-        return $logActivity;
+        return $logActivity->select('log_activities.*','users.name as name','users.id as user_id','whom_user.name as whom_user_name','whom_user.id as whom_user_id','assigned_incidents.id as assigned_incidents_id');
+        
     }
 
     /**
