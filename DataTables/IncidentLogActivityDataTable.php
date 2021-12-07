@@ -38,15 +38,12 @@ class IncidentLogActivityDataTable extends BaseDataTable
             ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d M Y - h:i a');
             })
-
-
             ->addColumn('action', function ($row) {
                 if ($row->assigned_incidents_id)
                     $action = '<a href="' .  route('admin.incidents.calendarView', $row->assigned_incidents_id) . '" class="btn btn-sm btn-info view-attendance"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
                 return $action ?? null;
             })
-
             ->rawColumns(['name', 'whom_user_name', 'properties', 'action']);
     }
 
@@ -58,6 +55,7 @@ class IncidentLogActivityDataTable extends BaseDataTable
     public function query()
     {
         $logActivity = LogActivity::leftJoin('users', 'users.id', '=', 'log_activities.causer_id')
+<<<<<<< HEAD
             ->leftJoin('assigned_incidents', 'assigned_incidents.id', '=', 'log_activities.subject_id')
             ->leftJoin('users as whom_user', function ($join) {
                 $join->on('whom_user.id', '=', 'assigned_incidents.user_id');
@@ -72,8 +70,26 @@ class IncidentLogActivityDataTable extends BaseDataTable
 
             $logActivity = $logActivity->whereBetween('log_activities.created_at', [$startDate->toDateString() . ' 00:00:00', $endDate->toDateString() . ' 23:59:59']);
         }
+=======
+        ->leftJoin('assigned_incidents', 'assigned_incidents.id', '=', 'log_activities.subject_id')
+        ->leftJoin('users as whom_user', function ($join) {
+            $join->on('whom_user.id', '=', 'assigned_incidents.user_id');})
+        ->where('log_activities.subject_type','Modules\Incident\Entities\AssignedIncident');
 
-        return $logActivity;
+        if (request()->daterange)
+       {
+        $dates = explode(' - ', request()->daterange);
+        $startCreate = now()->subMonth()->format($this->global->date_format);
+        $endCreate = now()->format($this->global->date_format);
+        $startDate = Carbon::createFromFormat($this->global->date_format, $dates[0] ?? $startCreate);
+        $endDate = Carbon::createFromFormat($this->global->date_format, $dates[1] ?? $endCreate);
+
+        $logActivity = $logActivity->whereBetween('log_activities.created_at', [$startDate->toDateString() . ' 00:00:00', $endDate->toDateString() . ' 23:59:59']);
+       }
+>>>>>>> 08a5dc78c8585e47b650f1709c9a01f6a6bb48e3
+
+        return $logActivity->select('log_activities.*','users.name as name','users.id as user_id','whom_user.name as whom_user_name','whom_user.id as whom_user_id','assigned_incidents.id as assigned_incidents_id');
+        
     }
 
     /**
