@@ -26,6 +26,7 @@ class IncidentLogActivityDataTable extends BaseDataTable
             })
 
             ->editColumn('whom_user_name', function ($row) {
+                if($row->whom_user_id)
                 return '<a target="_blank" href="' . route("admin.employees.show", $row->whom_user_id) . '">' . $row->whom_user_name . '</a>';
             })
 
