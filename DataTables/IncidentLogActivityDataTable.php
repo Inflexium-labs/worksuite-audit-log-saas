@@ -26,28 +26,26 @@ class IncidentLogActivityDataTable extends BaseDataTable
             })
 
             ->editColumn('whom_user_name', function ($row) {
+                if($row->whom_user_id)
                 return '<a target="_blank" href="' . route("admin.employees.show", $row->whom_user_id) . '">' . $row->whom_user_name . '</a>';
             })
-    
+
             ->editColumn('properties', function ($row) {
-              if($row->properties && $row->log_name != 'created')
-              {
-                return view('auditlog::properties')->with('properties',json_decode($row->properties,true))->with('id',$row->id);
-              }
-              else 
-                return '--';
+                if ($row->properties && $row->log_name != 'created') {
+                    return view('auditlog::properties')->with('properties', json_decode($row->properties, true))->with('id', $row->id);
+                } else
+                    return '--';
             })
             ->editColumn('created_at', function ($row) {
                 return $row->created_at->format('d M Y - h:i a');
             })
-
-        
             ->addColumn('action', function ($row) {
-                $action = '<a href="'.  route('admin.incidents.calendarView', $row->assigned_incidents_id).'" class="btn btn-sm btn-info view-attendance"><i class="fa fa-eye" aria-hidden="true"></i></a>';
-                return $action;
-            })
+                if ($row->assigned_incidents_id)
+                    $action = '<a href="' .  route('admin.incidents.calendarView', $row->assigned_incidents_id) . '" class="btn btn-sm btn-info view-attendance"><i class="fa fa-eye" aria-hidden="true"></i></a>';
 
-            ->rawColumns(['name','whom_user_name','properties','action']);
+                return $action ?? null;
+            })
+            ->rawColumns(['name', 'whom_user_name', 'properties', 'action']);
     }
 
     /**
@@ -61,19 +59,21 @@ class IncidentLogActivityDataTable extends BaseDataTable
         ->leftJoin('assigned_incidents', 'assigned_incidents.id', '=', 'log_activities.subject_id')
         ->leftJoin('users as whom_user', function ($join) {
             $join->on('whom_user.id', '=', 'assigned_incidents.user_id');})
-        ->select('log_activities.*','users.name as name','users.id as user_id','whom_user.name as whom_user_name','whom_user.id as whom_user_id','assigned_incidents.id as assigned_incidents_id')
         ->where('log_activities.subject_type','Modules\Incident\Entities\AssignedIncident');
 
-       if(request()->daterange)
+        if (request()->daterange)
        {
         $dates = explode(' - ', request()->daterange);
-        $startDate = Carbon::create($dates[0] ?? date('Y-m-d'));
-        $endDate = Carbon::create($dates[1] ?? date('Y-m-d'));
+        $startCreate = now()->subMonth()->format($this->global->date_format);
+        $endCreate = now()->format($this->global->date_format);
+        $startDate = Carbon::createFromFormat($this->global->date_format, $dates[0] ?? $startCreate);
+        $endDate = Carbon::createFromFormat($this->global->date_format, $dates[1] ?? $endCreate);
 
-        $logActivity = $logActivity->whereBetween('log_activities.created_at', [$startDate->toDateString().' 00:00:00', $endDate->toDateString().' 23:59:59']);
+        $logActivity = $logActivity->whereBetween('log_activities.created_at', [$startDate->toDateString() . ' 00:00:00', $endDate->toDateString() . ' 23:59:59']);
        }
 
-        return $logActivity;
+        return $logActivity->select('log_activities.*','users.name as name','users.id as user_id','whom_user.name as whom_user_name','whom_user.id as whom_user_id','assigned_incidents.id as assigned_incidents_id');
+        
     }
 
     /**
@@ -126,12 +126,12 @@ class IncidentLogActivityDataTable extends BaseDataTable
             __('auditlog::app._log_activity.ip')           => ['data' => 'ip', 'name' => 'log_activities.ip'],
             __('auditlog::app._log_activity.date')         => ['data' => 'created_at', 'name' => 'log_activities.created_at'],
             Column::computed('action', __('auditlog::app._log_activity.view_mark'))
-            ->exportable(false)
-            ->printable(false)
-            ->orderable(false)
-            ->searchable(false)
-            ->width(150)
-            ->addClass('text-center')
+                ->exportable(false)
+                ->printable(false)
+                ->orderable(false)
+                ->searchable(false)
+                ->width(150)
+                ->addClass('text-center')
         ];
     }
 

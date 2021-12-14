@@ -54,13 +54,15 @@ class LogActivityDataTable extends BaseDataTable
             ->select('log_activities.*', 'users.name as name');
 
         if (request()->daterange)
-            $dates = explode(' - ', request()->daterange);
+       {
+        $dates = explode(' - ', request()->daterange);
         $startCreate = now()->subMonth()->format($this->global->date_format);
         $endCreate = now()->format($this->global->date_format);
         $startDate = Carbon::createFromFormat($this->global->date_format, $dates[0] ?? $startCreate);
         $endDate = Carbon::createFromFormat($this->global->date_format, $dates[1] ?? $endCreate);
 
         $logActivity = $logActivity->whereBetween('log_activities.created_at', [$startDate->toDateString() . ' 00:00:00', $endDate->toDateString() . ' 23:59:59']);
+       }
 
 
         if (request()->model_name)
